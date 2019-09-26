@@ -1,0 +1,12 @@
+command = '__APP_PATH__/venv/bin/gunicorn'
+pythonpath = '__APP_PATH__'
+workers = 3
+user = '__APP_USER__'
+bind = '0.0.0.0:__APP_PORT__'
+pid = '__APP_PATH__/log/__APP_NAME__-pid'
+errorlog = '__APP_PATH__/log/error.log'
+accesslog = '__APP_PATH__/log/access.log'
+access_log_format = '%({X-Real-IP}i)s %({X-Forwarded-For}i)s %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+loglevel = 'warning'
+capture_output = True
+timeout = 90
