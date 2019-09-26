@@ -34,3 +34,5 @@ sudo systemctl enable alexa.service
 sudo systemctl start alexa.service
 sudo systemctl status alexa.service
 # journalctl -xe
+# Test
+# curl http://0.0.0.0:$app_port/player/

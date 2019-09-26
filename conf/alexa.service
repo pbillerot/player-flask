@@ -1,6 +1,6 @@
 [Unit]
 Description=alexa gunicorn daemon
-After=network.target
+After=network-online.target
 
 [Service]
 PIDFile=/home/billerot/Git/alexa-flask/log/alexa-pid
@@ -11,6 +11,7 @@ ExecStart=/home/billerot/Git/alexa-flask/venv/bin/gunicorn -c /home/billerot/Git
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
+StandardOutput=journal+console
 
 [Install]
 WantedBy=multi-user.target
