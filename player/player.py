@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-import logging
 from flask import Flask, Blueprint
 from flask import request, g, current_app
 import pygame
 import time
-import os
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+import os, logging
 
 player = Blueprint('main', __name__, url_prefix="/player")
 #Initialisation Pygame
@@ -19,8 +15,8 @@ def accueil():
 
 @player.route('/play/<mediafile>')
 def play(mediafile):
-  logger.info(mediafile)
-  logger.info(current_app.config)
+  logging.info(f"play: {mediafile}")
+  logging.debug(current_app.config)
   if "son" in current_app.config:
     current_app.config["son"].stop()
   filePath = os.path.join(player.root_path, 'media', mediafile)
@@ -31,9 +27,10 @@ def play(mediafile):
 
 @player.route('/stop')
 def stop():
-  logger.info("stop")
-  logger.info(current_app.config)
+  logging.info("stop")
+  logging.info(current_app.config)
   if "son" in current_app.config:
+    logging.info(f"stop: {mediafile}")
     current_app.config["son"].stop()
   return 'Media: stop\n'
 

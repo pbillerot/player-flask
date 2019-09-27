@@ -1,8 +1,12 @@
+import logging
+import os
 from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
 
 from alexa.skill import sb
 from player.player import player
+
+logging.basicConfig(filename="log/alexa.log",level=logging.DEBUG)
 
 def create_app():
   app = Flask(__name__)
