@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-  Point d'entrée du skill Alexa
+  Point d'entrée du player
 
 """
 import logging
@@ -8,9 +8,8 @@ from logging.handlers import RotatingFileHandler
 
 import os
 from flask import Flask
-from flask_ask_sdk.skill_adapter import SkillAdapter
 
-from alexa.skill import sb
+from player.player import player
 
 # création de l'objet logger qui va nous servir à écrire dans les logs
 logger = logging.getLogger()
@@ -35,12 +34,8 @@ logger.addHandler(stream_handler)
 
 def create_app():
   app = Flask(__name__)
-  skill_adapter = SkillAdapter(
-    skill=sb.create(), 
-    skill_id="amzn1.ask.skill.bd7515ac-93e7-48c6-b2b5-58dcd0fb0951", 
-    app=app)
-  skill_adapter.register(app=app, route="/alexa")
-  logger.info("Alexa en marche...")
+  app.register_blueprint(player)
+  logger.info("Player en marche...")
   return app
 
 app = create_app()
