@@ -3,7 +3,7 @@ from flask import Flask, Blueprint
 import time
 import os, logging
 
-player = Blueprint('main', __name__, url_prefix="/player")
+player = Blueprint('main', __name__, url_prefix="/")
 
 # pgrep --list-name audaciou
 
@@ -13,17 +13,43 @@ def accueil():
 
 @player.route('/play/<mediafile>')
 def play(mediafile):
-  filePath = os.path.join(player.root_path, 'media', mediafile)
-  command = f"audacious {filePath}"
-  logging.info(command)
-  iret = os.system(command)
-  return f'Play {iret} {command}\n'
+  message = "Play..."
+  if os.system("pgrep --list-name audacious") == 0:
+    filePath = os.path.join(player.root_path, 'media', mediafile)
+    if os.path.exists(filePath):
+      command = f"audacious {filePath}"
+      iret = os.system(command)
+      message = f"play {iret} {command}"
+      if iret == 0:
+        logging.info(f"player {message}")
+      else:
+        logging.error(f"player {message}")
+    else:
+      message = f"{filePath} non trouvé"
+      logging.error(f"player {message}")  
+  else:
+    message = f"Audacious non démarré"
+    logging.error(f"player {message}")
+
+  return f'{message}\n'
 
 @player.route('/stop')
 def stop():
-  iret = os.system(f"audacious --stop")
-  logging.info(f"stop {iret}")
-  return f'Stop: {iret}\n'
+  message = "Stop.."
+  if os.system("pgrep --list-name audacious") == 0:
+    command = f"audacious --stop"
+    iret = os.system(command)
+    message = f"stop {iret}"
+    if iret == 0:
+      logging.info(f"player {message}")
+    else:
+      logging.error(f"player {message}")
+  else:
+    message = f"Audacious non démarré"
+    logging.error(f"player {message}")
+
+  return f'{message}\n'
+
 
 # Tests unitaires
 if __name__ == '__main__':
