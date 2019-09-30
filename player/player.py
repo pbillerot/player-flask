@@ -5,6 +5,8 @@ import os, logging
 
 player = Blueprint('main', __name__, url_prefix="/player")
 
+# pgrep --list-name audaciou
+
 @player.route('/')
 def accueil():
   return 'Player à votre écoute\n'
@@ -14,14 +16,14 @@ def play(mediafile):
   filePath = os.path.join(player.root_path, 'media', mediafile)
   command = f"audacious {filePath}"
   logging.info(command)
-  os.system(command)
-  return f'Play {command}\n'
+  iret = os.system(command)
+  return f'Play {iret} {command}\n'
 
 @player.route('/stop')
 def stop():
-  logging.info("stop")
-  os.system(f"audacious --stop")
-  return 'Stop: current\n'
+  iret = os.system(f"audacious --stop")
+  logging.info(f"stop {iret}")
+  return f'Stop: {iret}\n'
 
 # Tests unitaires
 if __name__ == '__main__':
