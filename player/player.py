@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, Blueprint
-from flask import request, g, current_app
+from flask import request, session
 import pygame
 import time
 import os, logging
+
+def playMediafile(filePath):
+  if session["player"] is not None:
+    session["player"] = pygame.mixer.Sound(filePath)
+  else:
+    logging.info(f"stop")
+    session["player"].stop()
+    session["player"] = pygame.mixer.Sound(filePath)
+  logging.info(f"play: {filePath}")
+  session["player"].play(-1)
 
 player = Blueprint('main', __name__, url_prefix="/player")
 #Initialisation Pygame
@@ -15,23 +25,15 @@ def accueil():
 
 @player.route('/play/<mediafile>')
 def play(mediafile):
-  logging.info(f"play: {mediafile}")
-  logging.debug(current_app.config)
-  if "son" in current_app.config:
-    current_app.config["son"].stop()
   filePath = os.path.join(player.root_path, 'media', mediafile)
-  son = pygame.mixer.Sound(filePath)
-  son.play(-1)
-  current_app.config["son"] = son
-  return 'Media: play {}\n'.format(mediafile)
+  playMediafile(filePath)
+  return f'Media: play {mediafile}\n'
 
 @player.route('/stop')
 def stop():
-  logging.info("stop")
-  logging.info(current_app.config)
-  if "son" in current_app.config:
-    logging.info(f"stop: {mediafile}")
-    current_app.config["son"].stop()
+  if session["player"] is not None:
+    logging.info(f"stop")
+    session["player"].stop()
   return 'Media: stop\n'
 
 # Tests unitaires

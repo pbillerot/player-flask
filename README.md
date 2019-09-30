@@ -15,3 +15,9 @@ pip install pygame
 # Pour environnement de Dev VSCodium
 pip install pylint rope
 ```
+
+Tests unitaires
+---------------
+    source venv/bin/activate
+    gunicorn --bind 127.0.0.1:3000 wsgi:app
+
