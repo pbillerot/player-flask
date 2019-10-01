@@ -2,4 +2,4 @@
 #
 # Démarrage du player
 #
-/home/billerot/Git/player-flask/venv/bin/gunicorn -c /home/billerot/Git/player-flask/gunicorn.py wsgi:app
+/home/billerot/Git/player-flask/venv/bin/gunicorn -c /home/billerot/Git/player-flask/gunicorn.py app:app
