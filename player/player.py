@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, jsonify
 import time
 import os, logging
 
-player = Blueprint('main', __name__, url_prefix="/")
+app = Flask(__name__)
 
 # pgrep --list-name audaciou
 
-@player.route('/')
+@app.route('/')
 def accueil():
-  return 'Player à votre écoute\n'
+  message = "Player à votre écoute..."
+  logging.info(f"player {message}")
+  return jsonify(message)
 
-@player.route('/play/<mediafile>')
+@app.route('/play/<mediafile>')
 def play(mediafile):
   message = "Play..."
   if os.system("pgrep --list-name audacious") == 0:
-    filePath = os.path.join(player.root_path, 'media', mediafile)
+    filePath = os.path.join(app.root_path, 'media', mediafile)
     if os.path.exists(filePath):
       command = f"audacious {filePath}"
       iret = os.system(command)
@@ -33,7 +35,7 @@ def play(mediafile):
 
   return f'{message}\n'
 
-@player.route('/stop')
+@app.route('/stop')
 def stop():
   message = "Stop.."
   if os.system("pgrep --list-name audacious") == 0:
@@ -50,11 +52,19 @@ def stop():
 
   return f'{message}\n'
 
+def info(message):
+  app.logger.info(f"player {message}")
+def error(message):
+  app.logger.error(f"player {message}")
 
 # Tests unitaires
 if __name__ == '__main__':
-  # global app
-  app = Flask(__name__)
-  app.register_blueprint(player)
-  logging.info("Player en marche...")
+  # app = Flask(__name__)
+  # app.register_blueprint(player)
+  # logging.info("Player en marche...")
   app.run()
+
+if __name__ != '__main__':
+  gunicorn_logger = logging.getLogger('gunicorn.error')
+  app.logger.handlers = gunicorn_logger.handlers
+  # app.logger.level(gunicorn_logger.level)
