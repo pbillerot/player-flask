@@ -20,7 +20,19 @@ def accueil():
 def play(keyFile):
   message = "Play..."
   if os.system("pgrep --list-name audacious") == 0:
-    if medias["drums"][keyFile] is not None:
+    if keyFile == "0":
+      command = f"audacious --stop"
+      iret = os.system(command)
+      message = f"play {iret} {command}"
+    elif keyFile == "1":
+      command = f"audacious --pause"
+      iret = os.system(command)
+      message = f"play {iret} {command}"
+    elif keyFile == "2":
+      command = f"audacious --play"
+      iret = os.system(command)
+      message = f"play {iret} {command}"
+    elif medias["drums"][keyFile] is not None:
       filePath = os.path.join(app.root_path, 'media', medias["drums"][keyFile])
       if os.path.exists(filePath):
         command = f"audacious {filePath}"
