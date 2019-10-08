@@ -1,35 +1,44 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify
-import os, logging
+import os, logging, json
 from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 
+# Chargement des clés d'accès aux médias
+medias = {}
+with open('media/player.json') as outfile:
+    medias = json.load(outfile)
+
 @app.route('/')
 def accueil():
-  message = "Player à votre écoute..."
+  message = "Player a votre ecoute..."
   info(message)
   return jsonify(message)
 
-@app.route('/play/<mediafile>')
-def play(mediafile):
+@app.route('/play/<keyFile>')
+def play(keyFile):
   message = "Play..."
   if os.system("pgrep --list-name audacious") == 0:
-    filePath = os.path.join(app.root_path, 'media', mediafile)
-    if os.path.exists(filePath):
-      command = f"audacious {filePath}"
-      iret = os.system(command)
-      message = f"play {iret} {command}"
-      if iret == 0:
-        info(message)
+    if medias["drums"][keyFile] is not None:
+      filePath = os.path.join(app.root_path, 'media', medias["drums"][keyFile])
+      if os.path.exists(filePath):
+        command = f"audacious {filePath}"
+        iret = os.system(command)
+        message = f"play {iret} {command}"
+        if iret == 0:
+          info(message)
+        else:
+          error(message)
       else:
+        message = f"{filePath} non trouvé"
         error(message)
     else:
-      message = f"{filePath} non trouvé"
-      error(message)  
+      message(f"clé [{keyFile}] non trouvée")
   else:
     message = f"Audacious non démarré"
     error(message)
+    
 
   return jsonify(message)
 

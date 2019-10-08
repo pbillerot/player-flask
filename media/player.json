@@ -1,0 +1,10 @@
+{
+    "drums": {
+        "100": "drums_100.wav",
+        "110": "drums_110.wav",
+        "117": "drums_117.wav",
+        "747": "drums_big_jet_plane.wav",
+        "25": "drums_fille_pere_noel.wav",
+        "26": "drums_la_grange.wav"
+    }
+}
