@@ -6,7 +6,6 @@ from logging.handlers import RotatingFileHandler
 app = Flask(__name__)
 
 # Chargement des clés d'accès aux médias
-medias = {}
 with open('media/player.json') as outfile:
     medias = json.load(outfile)
 
